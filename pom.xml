@@ -87,6 +87,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <!-- Thymeleaf方言支持SpringSecurity 依赖-->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+            <version>${thymeleaf-extras-springsecurity4.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

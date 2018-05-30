@@ -20,7 +20,7 @@ public class UserDO {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long Id;
+  private Long id;
 
   /**
    * 姓名
