@@ -2,12 +2,14 @@ package com.rainbow.house.search.service.impl;
 
 import com.rainbow.house.search.base.LoginUserUtil;
 import com.rainbow.house.search.base.ServiceMultiResult;
+import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.base.enums.HouseStatusEnum;
 import com.rainbow.house.search.entity.HouseDO;
 import com.rainbow.house.search.repository.HouseRepository;
 import com.rainbow.house.search.service.HouseService;
 import com.rainbow.house.search.web.dto.HouseDTO;
 import com.rainbow.house.search.web.form.DataTableSearch;
+import com.rainbow.house.search.web.form.HouseForm;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,5 +86,11 @@ public class HouseServiceImpl implements HouseService {
       houseDTOS.add(houseDTO);
     });
     return new ServiceMultiResult<>(houses.getTotalElements(), houseDTOS);
+  }
+
+  @Override
+  public ServiceResult<HouseDTO> save(HouseForm houseForm) {
+
+    return null;
   }
 }

@@ -1,8 +1,10 @@
 package com.rainbow.house.search.service;
 
 import com.rainbow.house.search.base.ServiceMultiResult;
+import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.web.dto.HouseDTO;
 import com.rainbow.house.search.web.form.DataTableSearch;
+import com.rainbow.house.search.web.form.HouseForm;
 
 /**
  * <p>功能描述</br>房间业务逻辑接口定义</p>
@@ -21,4 +23,12 @@ public interface HouseService {
    * @return
    */
   ServiceMultiResult<HouseDTO> adminQuery(DataTableSearch searchBody);
+
+  /**
+   * <pre>新增房产信息</pre>
+   *
+   * @param houseForm 房产对应的数据
+   * @return
+   */
+  ServiceResult<HouseDTO> save(HouseForm houseForm);
 }

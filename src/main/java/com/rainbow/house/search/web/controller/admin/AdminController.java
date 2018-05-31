@@ -3,6 +3,7 @@ package com.rainbow.house.search.web.controller.admin;
 import com.rainbow.house.search.base.DataTableResponse;
 import com.rainbow.house.search.base.RainbowApiResponse;
 import com.rainbow.house.search.base.ServiceMultiResult;
+import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.entity.SupportAddressDO;
 import com.rainbow.house.search.service.HouseService;
 import com.rainbow.house.search.service.SupportAddressService;
@@ -143,14 +144,23 @@ public class AdminController {
    * @param bindingResult 绑定结果
    * @return
    */
-  public RainbowApiResponse addHouse(@Valid @ModelAttribute("form-add-house") HouseForm houseForm, BindingResult bindingResult) {
+  public RainbowApiResponse addHouse(@Valid @ModelAttribute("form-add-house") HouseForm houseForm,
+                                     BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       return new RainbowApiResponse(HttpStatus.BAD_REQUEST.value(), bindingResult.getAllErrors().get(0).getDefaultMessage(), null);
     }
     if (houseForm.getPhotos() == null || houseForm.getCover() == null) {
       return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), "必须上传图片");
     }
-    Map<SupportAddressDO.Level,SupportAddressDTO> addressMap = addressService.findByCityAndRegion(houseForm.getCityEnName(),houseForm.getRegionEnName());
-    return null;
+    Map<SupportAddressDO.Level, SupportAddressDTO> addressMap = addressService.findByCityAndRegion(houseForm.getCityEnName(), houseForm.getRegionEnName());
+    if (addressMap.keySet().size() != 2) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.NOT_VALID_PARAM);
+    }
+    /** 保存房产信息 **/
+    ServiceResult<HouseDTO> result = houseService.save(houseForm);
+    if (result.isSuccess()){
+      return RainbowApiResponse.success(RainbowApiResponse.RespStatus.SUCCESS);
+    }
+    return RainbowApiResponse.success(RainbowApiResponse.RespStatus.NOT_VALID_PARAM);
   }
 }
