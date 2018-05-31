@@ -13,4 +13,11 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface UserRepository extends CrudRepository<UserDO, Long> {
 
+  /**
+   * <pre>通过用户名查询用户</pre>
+   *
+   * @param userName 用户名
+   * @return
+   */
+  UserDO findUserByName(String userName);
 }

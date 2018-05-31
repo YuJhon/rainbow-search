@@ -1,5 +1,6 @@
 package com.rainbow.house.search.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -88,5 +89,15 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Application
     ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
     viewResolver.setTemplateEngine(templateEngine());
     return viewResolver;
+  }
+
+  /**
+   * <pre>ModelMapper</pre>
+   *
+   * @return
+   */
+  @Bean
+  public ModelMapper modelMapper() {
+    return new ModelMapper();
   }
 }
