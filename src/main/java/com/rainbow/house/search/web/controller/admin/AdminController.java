@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,7 +113,6 @@ public class AdminController {
     return response;
   }
 
-
   /**
    * <pre>上传图片</pre>
    *
@@ -158,9 +158,22 @@ public class AdminController {
     }
     /** 保存房产信息 **/
     ServiceResult<HouseDTO> result = houseService.save(houseForm);
-    if (result.isSuccess()){
+    if (result.isSuccess()) {
       return RainbowApiResponse.success(RainbowApiResponse.RespStatus.SUCCESS);
     }
     return RainbowApiResponse.success(RainbowApiResponse.RespStatus.NOT_VALID_PARAM);
+  }
+
+  /**
+   * <pre>房产编辑页面</pre>
+   *
+   * @param id    房产ID
+   * @param model 模型
+   * @return
+   */
+  @GetMapping("/house/edit")
+  public String houseEditPage(@RequestParam(value = "id") Long id, Model model) {
+
+    return null;
   }
 }

@@ -32,4 +32,11 @@ public class HouseTagDO {
    */
   private String name;
 
+  public HouseTagDO() {
+  }
+
+  public HouseTagDO(Long id, String tag) {
+    this.id = id;
+    this.name = tag;
+  }
 }
