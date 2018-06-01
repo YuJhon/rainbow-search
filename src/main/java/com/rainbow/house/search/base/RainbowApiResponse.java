@@ -89,13 +89,33 @@ public class RainbowApiResponse {
    */
   @Getter
   public enum RespStatus {
-
+    /**
+     * OK
+     **/
     SUCCESS(200, "OK"),
+    /**
+     * Bad Request
+     **/
     BAD_REQUEST(400, "Bad Request"),
+    /**
+     * Not Found
+     **/
     NOT_FOUND(404, "Not Found"),
+    /**
+     * Unknown Internal Error
+     **/
     INTERNAL_SERVER_ERROR(500, "Unknown Internal Error"),
+    /**
+     * Not valid Params
+     **/
     NOT_VALID_PARAM(40005, "Not valid Params"),
+    /**
+     * Operation not supported
+     **/
     NOT_SUPPORTED_OPERATION(40006, "Operation not supported"),
+    /**
+     * Not Login
+     **/
     NOT_LOGIN(50000, "Not Login");
 
     /**

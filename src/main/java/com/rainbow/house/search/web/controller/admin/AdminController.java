@@ -173,7 +173,7 @@ public class AdminController {
    */
   @GetMapping("/house/edit")
   public String houseEditPage(@RequestParam(value = "id") Long id, Model model) {
-
-    return null;
+    // TODO
+    return "admin/house-edit";
   }
 }

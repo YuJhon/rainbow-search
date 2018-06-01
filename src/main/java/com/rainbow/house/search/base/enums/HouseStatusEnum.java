@@ -9,10 +9,13 @@ package com.rainbow.house.search.base.enums;
  * @date 2018/5/31 11:00
  */
 public enum HouseStatusEnum {
-
+  /** 未审核 **/
   NOT_AUDITED(0, "未审核"),
+  /** 审核通过 **/
   PASSES(1, "审核通过"),
+  /** 已出租 **/
   RENTED(2, "已出租"),
+  /** 逻辑删除 **/
   DELETED(3, "逻辑删除");
 
   private int value;

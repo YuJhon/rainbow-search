@@ -60,7 +60,9 @@ public class ServiceResult<T> {
   }
 
   public enum Message {
+    /** Not Found Resource **/
     NOT_FOUND("Not Found Resource!"),
+    /** User Not Login **/
     NOT_LOGIN("User not login!");
 
     private String value;

@@ -35,7 +35,7 @@ public class HouseDetailDO {
   private String roundService;
 
   @Column(name = "rent_way")
-  private int rentWay;
+  private Integer rentWay;
 
   @Column(name = "address")
   private String detailAddress;

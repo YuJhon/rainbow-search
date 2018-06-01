@@ -60,7 +60,9 @@ public class SupportAddressDO {
    * 行政级别定义
    */
   public enum Level {
+    /** 城市 **/
     CITY("city"),
+    /** 区域 **/
     REGION("region");
 
     private String value;

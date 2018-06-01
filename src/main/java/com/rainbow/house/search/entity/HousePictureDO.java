@@ -39,11 +39,11 @@ public class HousePictureDO {
   /**
    * 图片宽度
    */
-  private int width;
+  private Integer width;
   /**
    * 图片高度
    */
-  private int height;
+  private Integer height;
   /**
    * 位置
    */

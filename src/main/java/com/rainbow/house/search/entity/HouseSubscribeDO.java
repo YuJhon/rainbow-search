@@ -32,7 +32,7 @@ public class HouseSubscribeDO {
   private Long adminId;
 
   /** 预约状态 1-加入待看清单 2-已预约看房时间 3-看房完成 **/
-  private int status;
+  private Integer status;
 
   @Column(name = "create_time")
   private Date createTime;

@@ -1,6 +1,8 @@
 package com.rainbow.house.search.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.ToString;
 
 /**
  * <p>功能描述</br>地址值对象</p>
@@ -10,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @projectName rainbow-search
  * @date 2018/5/31 16:55
  */
+@Data
+@ToString
 public class SupportAddressDTO {
 
   private Long id;
@@ -24,8 +28,8 @@ public class SupportAddressDTO {
 
   private String level;
 
-  private double baiduMapLongitude;
+  private Double baiduMapLongitude;
 
-  private double baiduMapLatitude;
+  private Double baiduMapLatitude;
 
 }

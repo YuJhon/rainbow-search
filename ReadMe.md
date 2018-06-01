@@ -70,9 +70,74 @@
 ```
 
 * 返回信息的统一处理
+>TODO
+    
+* 文件上传
+    * 002.DispatcherServlet中的解释
+    ![002.DispatcherServlet中的解释](./doc/photos/002.DispatcherServlet-MultipartResover%20Description.png)
+    * 003.MultipartResolver流程梳理
+    ![003.MultipartResolver流程梳理](./doc/photos/003.MultipartResolver流程梳理.png)
+    * 004.文件上传代码和配置
+    ![004.文件上传代码和配置](./doc/photos/004.文件上传代码和配置.png)
+
+* 分布式session实现
+    * 1.maven 依赖
+    ```xml
+    <!-- redis session依赖 -->
+    <dependency>
+        <groupId>org.springframework.session</groupId>
+        <artifactId>spring-session</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+    ```
+    * 2.配置信息
+    ```properties
+    #session(存储方式)
+    spring.session.store-type=redis
+    # redis config
+    spring.redis.database=0
+    spring.redis.host=127.0.0.1
+    spring.redis.port=6379
+    spring.redis.pool.min-idle=1
+    spring.redis.timeout=3000
+    ```
+    * 3.代码实现
+    ```java
+    package com.rainbow.house.search.config;
+    
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.data.redis.connection.RedisConnectionFactory;
+    import org.springframework.data.redis.core.RedisTemplate;
+    import org.springframework.data.redis.core.StringRedisTemplate;
+    import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+    
+    /**
+     * <p>功能描述</br></p>
+     *
+     * @author jiangy19
+     * @version v1.0
+     * @projectName rainbow-search
+     * @date 2018/6/1 9:07
+     */
+    @Configuration
+    @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 86400)
+    public class RedisSessionConfig {
+    
+      @Bean
+      public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
+        return new StringRedisTemplate(factory);
+      }
+    }
+
+    ```
 
 * ES的安装和配置
-
+> TODO
 
 #### 5.单元测试
 * 测试基类的配置
