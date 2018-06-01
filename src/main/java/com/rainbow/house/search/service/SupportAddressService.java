@@ -1,6 +1,10 @@
 package com.rainbow.house.search.service;
 
+import com.rainbow.house.search.base.ServiceMultiResult;
+import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.entity.SupportAddressDO;
+import com.rainbow.house.search.web.dto.SubwayDTO;
+import com.rainbow.house.search.web.dto.SubwayStationDTO;
 import com.rainbow.house.search.web.dto.SupportAddressDTO;
 
 import java.util.Map;
@@ -22,4 +26,19 @@ public interface SupportAddressService {
    * @return
    */
   Map<SupportAddressDO.Level, SupportAddressDTO> findByCityAndRegion(String cityEnName, String regionEnName);
+
+  /**
+   * <pre>查询所有的城市</pre>
+   *
+   * @return
+   */
+  ServiceMultiResult<SupportAddressDTO> findAllCities();
+
+  /**
+   * <pre>通过城市查询下属的所有区域信息</pre>
+   *
+   * @param cityEnName 城市名称
+   * @return
+   */
+  ServiceMultiResult<SupportAddressDTO> findAllRegionsByCityName(String cityEnName);
 }

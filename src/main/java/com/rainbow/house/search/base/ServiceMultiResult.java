@@ -37,5 +37,10 @@ public class ServiceMultiResult<T> {
     this.results = results;
   }
 
-
+  public int getResultSize() {
+    if (this.results == null) {
+      return 0;
+    }
+    return this.results.size();
+  }
 }

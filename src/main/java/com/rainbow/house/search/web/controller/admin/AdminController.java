@@ -6,9 +6,9 @@ import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.entity.SupportAddressDO;
 import com.rainbow.house.search.service.HouseService;
+import com.rainbow.house.search.service.SubwayService;
 import com.rainbow.house.search.service.SupportAddressService;
-import com.rainbow.house.search.web.dto.HouseDTO;
-import com.rainbow.house.search.web.dto.SupportAddressDTO;
+import com.rainbow.house.search.web.dto.*;
 import com.rainbow.house.search.web.form.DataTableSearch;
 import com.rainbow.house.search.web.form.HouseForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +37,16 @@ import java.util.Map;
 @RequestMapping("admin")
 public class AdminController {
 
+  public static final int ADDRESS_SIZE = 2;
+
   @Autowired
   private HouseService houseService;
 
   @Autowired
   private SupportAddressService addressService;
+
+  @Autowired
+  private SubwayService subwayService;
 
   /**
    * <pre>后台管理中心</pre>
@@ -152,8 +157,9 @@ public class AdminController {
     if (houseForm.getPhotos() == null || houseForm.getCover() == null) {
       return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), "必须上传图片");
     }
-    Map<SupportAddressDO.Level, SupportAddressDTO> addressMap = addressService.findByCityAndRegion(houseForm.getCityEnName(), houseForm.getRegionEnName());
-    if (addressMap.keySet().size() != 2) {
+    Map<SupportAddressDO.Level, SupportAddressDTO> addressMap = addressService.findByCityAndRegion(houseForm.getCityEnName(),
+            houseForm.getRegionEnName());
+    if (addressMap.keySet().size() != ADDRESS_SIZE) {
       return RainbowApiResponse.status(RainbowApiResponse.RespStatus.NOT_VALID_PARAM);
     }
     /** 保存房产信息 **/
@@ -173,7 +179,56 @@ public class AdminController {
    */
   @GetMapping("/house/edit")
   public String houseEditPage(@RequestParam(value = "id") Long id, Model model) {
-    // TODO
+    if (id == null || id < 1) {
+      return "404";
+    }
+    ServiceResult<HouseDTO> serviceResult = houseService.findCompleteOne(id);
+    if (!serviceResult.isSuccess()) {
+      return "500";
+    }
+    HouseDTO result = serviceResult.getResult();
+    model.addAttribute("house", result);
+    Map<SupportAddressDO.Level, SupportAddressDTO> addressMap = addressService.findByCityAndRegion(result.getCityEnName(),
+            result.getRegionEnName());
+    model.addAttribute("city", addressMap.get(SupportAddressDO.Level.CITY));
+    model.addAttribute("region", addressMap.get(SupportAddressDO.Level.REGION));
+
+    HouseDetailDTO houseDetailDTO = result.getHouseDetail();
+    ServiceResult<SubwayDTO> subwayDTOServiceResult = subwayService.findSubway(houseDetailDTO.getSubwayLineId());
+    if (subwayDTOServiceResult.isSuccess()) {
+      model.addAttribute("subway", subwayDTOServiceResult.getResult());
+    }
+    ServiceResult<SubwayStationDTO> subwayStationsResult = subwayService.findSubwayStation(houseDetailDTO.getSubwayStationId());
+    if (subwayStationsResult.isSuccess()) {
+      model.addAttribute("station", subwayStationsResult.getResult());
+    }
     return "admin/house-edit";
   }
+
+  /**
+   * <pre>编辑房产信息</pre>
+   *
+   * @param houseForm 房产信息封装对象
+   * @return
+   */
+  @PostMapping("/house/edit")
+  @ResponseBody
+  public RainbowApiResponse saveHouse(@Valid @ModelAttribute("form-house-edit") HouseForm houseForm,
+                                      BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), bindingResult.getAllErrors().get(0).getDefaultMessage());
+    }
+    Map<SupportAddressDO.Level, SupportAddressDTO> addressMap = addressService.findByCityAndRegion(houseForm.getCityEnName(),
+            houseForm.getRegionEnName());
+    if (addressMap.keySet().size() < ADDRESS_SIZE) {
+      return RainbowApiResponse.success(RainbowApiResponse.RespStatus.NOT_VALID_PARAM);
+    }
+    ServiceResult<?> result = houseService.update(houseForm);
+    if (result.isSuccess()) {
+      return RainbowApiResponse.success(null);
+    }
+    return RainbowApiResponse.message(RainbowApiResponse.RespStatus.BAD_REQUEST.getCode(), result.getMessage());
+  }
+
+
 }

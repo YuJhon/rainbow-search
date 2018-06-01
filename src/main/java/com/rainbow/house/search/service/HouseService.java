@@ -31,4 +31,20 @@ public interface HouseService {
    * @return
    */
   ServiceResult<HouseDTO> save(HouseForm houseForm);
+
+  /**
+   * 查询房产信息
+   *
+   * @param id 房产ID
+   * @return
+   */
+  ServiceResult<HouseDTO> findCompleteOne(Long id);
+
+  /**
+   * <pre>更新房产信息</pre>
+   *
+   * @param houseForm 房产数据
+   * @return
+   */
+  ServiceResult update(HouseForm houseForm);
 }

@@ -181,7 +181,7 @@ COMMIT;
 --  Table structure for `t_subway_station`
 -- ----------------------------
 DROP TABLE IF EXISTS `t_subway_station`;
-CREATE TABLE `subway_station` (
+CREATE TABLE `t_subway_station` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `subway_id` int(11) NOT NULL COMMENT '所属地铁线id',
   `name` varchar(32) NOT NULL COMMENT '站点名称',

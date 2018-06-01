@@ -3,6 +3,8 @@ package com.rainbow.house.search.repository;
 import com.rainbow.house.search.entity.SupportAddressDO;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 /**
  * <p>功能描述</br>地址的数据访问层</p>
  *
@@ -30,4 +32,21 @@ public interface SupportAddressRepository extends CrudRepository<SupportAddressD
    * @return
    */
   SupportAddressDO findByEnNameAndBelongTo(String regionEnName, String belongTo);
+
+  /**
+   * <pre>通过登记查询所有的城市</pre>
+   *
+   * @param level
+   * @return
+   */
+  List<SupportAddressDO> findAllByLevel(String level);
+
+  /**
+   * <pre>通过等级和所属城市获取所有地址</pre>
+   *
+   * @param level    等级
+   * @param belongTo 所属区域
+   * @return
+   */
+  List<SupportAddressDO> findAllByLevelAndBelongTo(String level, String belongTo);
 }
