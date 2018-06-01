@@ -206,14 +206,51 @@ public class HouseServiceImpl implements HouseService {
   @Override
   @Transactional
   public ServiceResult update(HouseForm houseForm) {
-    // TODO
+    Long houseId = houseForm.getId();
+    /** 1.房产记录的校验 **/
+    HouseDO house = houseRepository.findOne(houseId);
+    if (house == null) {
+      return ServiceResult.notFound();
+    }
+    /** 2.房产详细信息的校验 **/
+    HouseDetailDO detail = houseDetailRepository.findByHouseId(houseId);
+    if (detail == null) {
+      return ServiceResult.notFound();
+    }
 
-    return null;
+    /** 3.房产信息的包装 **/
+    ServiceResult wrapperResult = wrapperDetailInfo(detail, houseForm);
+    if (wrapperResult != null) {
+      return wrapperResult;
+    }
+
+    /** 4.保存房产详细信息 **/
+    houseDetailRepository.save(detail);
+
+    /** 5.保存房产图片信息 **/
+    List<HousePictureDO> pictures = generateHousePictures(houseForm, houseForm.getId());
+    housePictureRepository.save(pictures);
+
+    if (houseForm.getCover() == null) {
+      houseForm.setCover(house.getCover());
+    }
+
+    modelMapper.map(houseForm, house);
+    house.setLastUpdateTime(new Date());
+    /** 6.保存房产信息 **/
+    houseRepository.save(house);
+
+    if (house.getStatus() == HouseStatusEnum.PASSES.getValue()) {
+      // TODO
+    }
+    return ServiceResult.success();
   }
 
   @Override
   public ServiceMultiResult<HouseDTO> queryHouses(RentSearchCondition rentSearchCondition) {
-    // TODO
+    if (rentSearchCondition.getKeywords() != null && !"".equals(rentSearchCondition.getKeywords())) {
+      // TODO
+    }
     return simpleQuery(rentSearchCondition);
   }
 
