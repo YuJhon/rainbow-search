@@ -8,7 +8,7 @@ import com.rainbow.house.search.web.dto.HouseDTO;
 import com.rainbow.house.search.web.dto.HouseSubscribeDTO;
 import com.rainbow.house.search.web.form.DataTableSearch;
 import com.rainbow.house.search.web.form.HouseForm;
-import javafx.util.Pair;
+import org.springframework.data.util.Pair;
 
 import java.util.Date;
 

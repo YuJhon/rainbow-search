@@ -18,7 +18,6 @@ import com.rainbow.house.search.web.dto.HouseSubscribeDTO;
 import com.rainbow.house.search.web.form.DataTableSearch;
 import com.rainbow.house.search.web.form.HouseForm;
 import com.rainbow.house.search.web.form.PhotoForm;
-import javafx.util.Pair;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,13 +26,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.*;
 
 /**
@@ -314,7 +311,8 @@ public class HouseServiceImpl implements HouseService {
     });
 
     for (HouseSubscribeDTO subscribeDTO : subscribeDTOS) {
-      Pair<HouseDTO, HouseSubscribeDTO> pair = Pair.of(idToHouseMap.get(subscribeDTO.getHouseId()), subscribeDTO);
+      HouseDTO tmpHouseDTO = idToHouseMap.get(subscribeDTO.getHouseId());
+      Pair<HouseDTO, HouseSubscribeDTO> pair = Pair.of(tmpHouseDTO, subscribeDTO);
       result.add(pair);
     }
 
@@ -329,7 +327,7 @@ public class HouseServiceImpl implements HouseService {
     if (houseSubscribe == null) {
       return new ServiceResult(false, "无预约记录");
     }
-    if (houseSubscribe.getStatus() != = HouseSubscribeStatusEnum.IN_ORDER_LIST.getValue()) {
+    if (houseSubscribe.getStatus() != HouseSubscribeStatusEnum.IN_ORDER_LIST.getValue()) {
       return new ServiceResult(false, "无法预约");
     }
 
