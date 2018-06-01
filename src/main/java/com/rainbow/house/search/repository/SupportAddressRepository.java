@@ -36,7 +36,7 @@ public interface SupportAddressRepository extends CrudRepository<SupportAddressD
   /**
    * <pre>通过登记查询所有的城市</pre>
    *
-   * @param level
+   * @param level 行政区域等级
    * @return
    */
   List<SupportAddressDO> findAllByLevel(String level);
@@ -49,4 +49,13 @@ public interface SupportAddressRepository extends CrudRepository<SupportAddressD
    * @return
    */
   List<SupportAddressDO> findAllByLevelAndBelongTo(String level, String belongTo);
+
+  /**
+   * <pre>通过等级和行政区域英文名查询结果</pre>
+   *
+   * @param level      行政区域等级
+   * @param cityEnName 行政区域英文名称
+   * @return
+   */
+  SupportAddressDO findAllByLevelAndEnName(String level, String cityEnName);
 }

@@ -75,4 +75,18 @@ public class SupportAddressServiceImpl implements SupportAddressService {
     });
     return new ServiceMultiResult<>(results.size(), results);
   }
+
+  @Override
+  public ServiceResult<SupportAddressDTO> findCity(String cityEnName) {
+    if (cityEnName == null || "".equals(cityEnName)) {
+      return ServiceResult.notFound();
+    }
+    String level = SupportAddressDO.Level.CITY.getValue();
+    SupportAddressDO city = supportAddressRepository.findAllByLevelAndEnName(level, cityEnName);
+    if (city == null) {
+      return ServiceResult.notFound();
+    }
+    SupportAddressDTO supportAddressDTO = modelMapper.map(city, SupportAddressDTO.class);
+    return ServiceResult.result(supportAddressDTO);
+  }
 }

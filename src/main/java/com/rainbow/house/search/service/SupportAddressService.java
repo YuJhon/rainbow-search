@@ -41,4 +41,12 @@ public interface SupportAddressService {
    * @return
    */
   ServiceMultiResult<SupportAddressDTO> findAllRegionsByCityName(String cityEnName);
+
+  /**
+   * <pre>通过名称查询城市</pre>
+   *
+   * @param cityEnName 城市名称
+   * @return
+   */
+  ServiceResult<SupportAddressDTO> findCity(String cityEnName);
 }

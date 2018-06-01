@@ -2,6 +2,7 @@ package com.rainbow.house.search.service;
 
 import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
+import com.rainbow.house.search.base.rent.RentSearchCondition;
 import com.rainbow.house.search.web.dto.HouseDTO;
 import com.rainbow.house.search.web.form.DataTableSearch;
 import com.rainbow.house.search.web.form.HouseForm;
@@ -47,4 +48,12 @@ public interface HouseService {
    * @return
    */
   ServiceResult update(HouseForm houseForm);
+
+  /**
+   * <pre>查询房间信息</pre>
+   *
+   * @param rentSearchCondition 租赁查询
+   * @return
+   */
+  ServiceMultiResult<HouseDTO> queryHouses(RentSearchCondition rentSearchCondition);
 }
