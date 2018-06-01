@@ -1,7 +1,10 @@
 package com.rainbow.house.search.repository;
 
 import com.rainbow.house.search.entity.UserDO;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  * <p>功能描述</br>用户数据访问层</p>
@@ -20,4 +23,34 @@ public interface UserRepository extends CrudRepository<UserDO, Long> {
    * @return
    */
   UserDO findUserByName(String userName);
+
+  /**
+   * <pre>更新用户姓名</pre>
+   *
+   * @param id   用户id
+   * @param name 用户姓名
+   */
+  @Modifying
+  @Query("update User as user set user.name = :name where id = :id")
+  void updateUsername(@Param(value = "id") Long id, @Param(value = "name") String name);
+
+  /**
+   * <pre>更新邮箱</pre>
+   *
+   * @param id    用户id
+   * @param email 用户邮箱
+   */
+  @Modifying
+  @Query("update User as user set user.email = :email where id = :id")
+  void updateEmail(@Param(value = "id") Long id, @Param(value = "email") String email);
+
+  /**
+   * <pre>更新密码</pre>
+   *
+   * @param id       用户Id
+   * @param password 用户密码
+   */
+  @Modifying
+  @Query("update User as user set user.password = :password where id = :id")
+  void updatePassword(@Param(value = "id") Long id, @Param(value = "password") String password);
 }

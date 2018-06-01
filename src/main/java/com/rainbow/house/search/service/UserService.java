@@ -1,6 +1,8 @@
 package com.rainbow.house.search.service;
 
+import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.entity.UserDO;
+import com.rainbow.house.search.web.dto.UserDTO;
 
 /**
  * <p>功能描述</br>用户服务接口定义</p>
@@ -18,4 +20,21 @@ public interface UserService {
    * @return
    */
   UserDO findByName(String userName);
+
+  /**
+   * <pre>通过ID查询记录</pre>
+   *
+   * @param id
+   * @return
+   */
+  ServiceResult<UserDTO> findById(Long id);
+
+  /**
+   * <pre>更新用户信息</pre>
+   *
+   * @param profile 更新项
+   * @param value   对应的值
+   * @return
+   */
+  ServiceResult modifyUserProfile(String profile, String value);
 }

@@ -28,5 +28,5 @@ public interface HouseTagRepository extends CrudRepository<HouseTagDO, Long> {
    * @param houseIds 房产Id列表
    * @return
    */
-  List<HouseTagDO> findAllbyHouseIdIn(List<Long> houseIds);
+  List<HouseTagDO> findAllByHouseIdIn(List<Long> houseIds);
 }

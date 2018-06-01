@@ -149,6 +149,8 @@ public class AdminController {
    * @param bindingResult 绑定结果
    * @return
    */
+  @PostMapping("/add/house")
+  @ResponseBody
   public RainbowApiResponse addHouse(@Valid @ModelAttribute("form-add-house") HouseForm houseForm,
                                      BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
@@ -229,6 +231,8 @@ public class AdminController {
     }
     return RainbowApiResponse.message(RainbowApiResponse.RespStatus.BAD_REQUEST.getCode(), result.getMessage());
   }
+
+
 
 
 }

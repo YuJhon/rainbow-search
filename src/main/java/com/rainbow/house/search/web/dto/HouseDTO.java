@@ -37,7 +37,7 @@ public class HouseDTO implements Serializable {
 
   private Integer floor;
 
-  private Integer adminId;
+  private Long adminId;
 
   private String district;
 

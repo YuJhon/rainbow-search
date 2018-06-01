@@ -1,15 +1,22 @@
 package com.rainbow.house.search.service.impl;
 
+import com.rainbow.house.search.base.LoginUserUtil;
+import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.entity.RoleDO;
 import com.rainbow.house.search.entity.UserDO;
 import com.rainbow.house.search.repository.RoleRepository;
 import com.rainbow.house.search.repository.UserRepository;
 import com.rainbow.house.search.service.UserService;
+import com.rainbow.house.search.web.dto.UserDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +38,11 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private RoleRepository roleRepository;
 
+  @Autowired
+  private ModelMapper modelMapper;
+
+  private final Md5PasswordEncoder passwordEncoder = new Md5PasswordEncoder();
+
   @Override
   public UserDO findByName(String userName) {
     UserDO user = userRepository.findUserByName(userName);
@@ -45,5 +57,35 @@ public class UserServiceImpl implements UserService {
     roles.forEach(roleDO -> grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + roleDO.getName())));
     user.setAuthorities(grantedAuthorities);
     return user;
+  }
+
+  @Override
+  public ServiceResult<UserDTO> findById(Long id) {
+    UserDO user = userRepository.findOne(id);
+    UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+    return ServiceResult.result(userDTO);
+  }
+
+  @Override
+  @Transactional
+  public ServiceResult modifyUserProfile(String profile, String value) {
+    Long userId = LoginUserUtil.getLoginUserId();
+    if (profile == null || profile.isEmpty()) {
+      return new ServiceResult(false, "属性不可以为空");
+    }
+    switch (profile) {
+      case "name":
+        userRepository.updateUsername(userId, value);
+        break;
+      case "email":
+        userRepository.updateEmail(userId, value);
+        break;
+      case "password":
+        userRepository.updatePassword(userId, this.passwordEncoder.encodePassword(value, userId));
+        break;
+      default:
+        return new ServiceResult(false, "不支持的属性");
+    }
+    return ServiceResult.success();
   }
 }

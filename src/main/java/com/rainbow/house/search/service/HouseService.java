@@ -2,10 +2,15 @@ package com.rainbow.house.search.service;
 
 import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
+import com.rainbow.house.search.base.enums.HouseSubscribeStatusEnum;
 import com.rainbow.house.search.base.rent.RentSearchCondition;
 import com.rainbow.house.search.web.dto.HouseDTO;
+import com.rainbow.house.search.web.dto.HouseSubscribeDTO;
 import com.rainbow.house.search.web.form.DataTableSearch;
 import com.rainbow.house.search.web.form.HouseForm;
+import javafx.util.Pair;
+
+import java.util.Date;
 
 /**
  * <p>功能描述</br>房间业务逻辑接口定义</p>
@@ -56,4 +61,41 @@ public interface HouseService {
    * @return
    */
   ServiceMultiResult<HouseDTO> queryHouses(RentSearchCondition rentSearchCondition);
+
+  /**
+   * <pre>添加预约记录</pre>
+   *
+   * @param houseId 房产Id
+   * @return
+   */
+  ServiceResult addSubscribeOrder(Long houseId);
+
+  /**
+   * <pre>查询预约列表信息</pre>
+   *
+   * @param status 状态
+   * @param start  开始记录
+   * @param size   条数
+   * @return
+   */
+  ServiceMultiResult<Pair<HouseDTO, HouseSubscribeDTO>> querySubscribeList(HouseSubscribeStatusEnum status, int start, int size);
+
+  /**
+   * <pre>预约看房时间</pre>
+   *
+   * @param houseId   房产Id
+   * @param orderTime 预约时间
+   * @param telephone 电话
+   * @param desc      描述
+   * @return
+   */
+  ServiceResult subscribe(Long houseId, Date orderTime, String telephone, String desc);
+
+  /**
+   * <pre>取消预约</pre>
+   *
+   * @param houseId 房产ID
+   * @return
+   */
+  ServiceResult cancelSubscribe(Long houseId);
 }

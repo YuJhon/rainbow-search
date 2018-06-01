@@ -1,6 +1,8 @@
 package com.rainbow.house.search.repository;
 
 import com.rainbow.house.search.entity.HouseSubscribeDO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -20,4 +22,14 @@ public interface HouseSubscribeRepository extends CrudRepository<HouseSubscribeD
    * @return
    */
   HouseSubscribeDO findByHouseIdAndUserId(Long houseId, Long loginUserId);
+
+  /**
+   * <pre>分页查询记录</pre>
+   *
+   * @param adminId  用户Id
+   * @param status   状态
+   * @param pageable 分页参数
+   * @return
+   */
+  Page<HouseSubscribeDO> findAllByAdminIdAndStatus(Long adminId, int status, Pageable pageable);
 }
