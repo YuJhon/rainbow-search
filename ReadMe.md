@@ -155,6 +155,7 @@
         elasticsearch.host=127.0.0.1
         elasticsearch.port=9300
         ```
+    
 * 索引的构建
     * 1.索引结构定义(json格式)
         - [使用默认的分词器（standard）](./doc/index/house_index_mapping.json)
@@ -205,6 +206,15 @@
         spring.kafka.bootstrap-servers=127.0.0.1:9092
         spring.kafka.consumer.group-id=rainbow-search
         ```
+    * 启动命令
+        * zookeeper
+            ```bash
+            D:\RAIN-MQ\kafka_2.11-1.1.0>bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+            ```
+        * kafka
+            ```bash
+            D:\RAIN-MQ\kafka_2.11-1.1.0>bin\windows\kafka-server-start.bat config\server.properties
+            ```
 #### 5.单元测试
 * 测试基类的配置
 ```java
