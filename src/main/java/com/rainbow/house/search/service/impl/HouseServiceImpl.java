@@ -352,6 +352,112 @@ public class HouseServiceImpl implements HouseService {
     return ServiceResult.success();
   }
 
+  @Override
+  @Transactional
+  public ServiceResult removePhoto(Long id) {
+    HousePictureDO housePicture = housePictureRepository.findOne(id);
+    if (housePicture == null) {
+      return ServiceResult.notFound();
+    }
+    try {
+      /** 远程图片空间图片的删除 **/
+      housePictureRepository.delete(id);
+      return ServiceResult.success();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ServiceResult(false, e.getMessage());
+    }
+  }
+
+  @Override
+  @Transactional
+  public ServiceResult updateStatus(Long id, int status) {
+    HouseDO house = houseRepository.findOne(id);
+    if (house == null) {
+      return ServiceResult.notFound();
+    }
+
+    if (house.getStatus() == status) {
+      return new ServiceResult(false, "状态没有发生变化");
+    }
+
+    if (house.getStatus() == HouseStatusEnum.RENTED.getValue()) {
+      return new ServiceResult(false, "已出租的房源不允许修改状态");
+    }
+
+    if (house.getStatus() == HouseStatusEnum.DELETED.getValue()) {
+      return new ServiceResult(false, "已删除的资源不允许操作");
+    }
+
+    houseRepository.updateStatus(id, status);
+    return ServiceResult.success();
+  }
+
+  @Override
+  @Transactional
+  public ServiceResult updateCover(Long coverId, Long targetId) {
+    HousePictureDO cover = housePictureRepository.findOne(coverId);
+    if (cover == null) {
+      return ServiceResult.notFound();
+    }
+    houseRepository.updateCover(targetId, cover.getPath());
+    return ServiceResult.success();
+  }
+
+  @Override
+  @Transactional
+  public ServiceResult addTag(Long houseId, String tag) {
+    HouseDO house = houseRepository.findOne(houseId);
+    if (house == null) {
+      return ServiceResult.notFound();
+    }
+    HouseTagDO houseTag = houseTagRepository.findByNameAndHouseId(tag, houseId);
+    if (houseTag != null) {
+      return new ServiceResult(false, "标签已经存在");
+    }
+    houseTagRepository.save(new HouseTagDO(houseId, tag));
+    return ServiceResult.success();
+  }
+
+  @Override
+  @Transactional
+  public ServiceResult removeTag(Long houseId, String tag) {
+    HouseDO house = houseRepository.findOne(houseId);
+    if (house == null) {
+      return ServiceResult.notFound();
+    }
+    HouseTagDO houseTag = houseTagRepository.findByNameAndHouseId(tag, houseId);
+    if (houseTag == null) {
+      return new ServiceResult(false, "标签不存在");
+    }
+    houseTagRepository.delete(houseTag.getId());
+    return ServiceResult.success();
+  }
+
+  @Override
+  @Transactional
+  public ServiceResult finishSubscribe(Long houseId) {
+    Long adminId = LoginUserUtil.getLoginUserId();
+    HouseSubscribeDO subscribe = houseSubscribeRepository.findByHouseIdAndAdminId(houseId, adminId);
+    if (subscribe == null) {
+      return new ServiceResult(false, "无预约记录");
+    }
+
+    houseSubscribeRepository.updateStatus(subscribe.getId(), HouseSubscribeStatusEnum.FINISH.getValue());
+    houseRepository.updateWatchTimes(houseId);
+    return ServiceResult.success();
+  }
+
+  @Override
+  public ServiceMultiResult<Pair<HouseDTO, HouseSubscribeDTO>> findSubscribeList(int start, int size) {
+    Long userId = LoginUserUtil.getLoginUserId();
+    Pageable pageable = new PageRequest(start / size, size, new Sort(Sort.Direction.DESC, "orderTime"));
+
+    Page<HouseSubscribeDO> page = houseSubscribeRepository.findAllByAdminIdAndStatus(userId, HouseSubscribeStatusEnum.IN_ORDER_TIME.getValue(), pageable);
+
+    return wrapper(page);
+  }
+
   /**
    * <pre>数据库简单查询</pre>
    *

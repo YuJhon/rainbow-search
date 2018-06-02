@@ -3,6 +3,8 @@ package com.rainbow.house.search.repository;
 import com.rainbow.house.search.entity.HouseSubscribeDO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -32,4 +34,23 @@ public interface HouseSubscribeRepository extends CrudRepository<HouseSubscribeD
    * @return
    */
   Page<HouseSubscribeDO> findAllByAdminIdAndStatus(Long adminId, int status, Pageable pageable);
+
+  /**
+   * <pre>通过房间Id和房产主id查询对应的预约记录</pre>
+   *
+   * @param houseId 房产Id
+   * @param adminId 房源主人ID
+   * @return
+   */
+  HouseSubscribeDO findByHouseIdAndAdminId(Long houseId, Long adminId);
+
+  /**
+   * <pre>更新预约状态</pre>
+   *
+   * @param id     预约记录Id
+   * @param status 更新状态
+   */
+  @Modifying
+  @Query("update t_house_subscribe as subscribe set subscribe.status = :status where subscribe.id = :id")
+  void updateStatus(Long id, int status);
 }

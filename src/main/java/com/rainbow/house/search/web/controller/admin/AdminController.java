@@ -4,14 +4,19 @@ import com.rainbow.house.search.base.DataTableResponse;
 import com.rainbow.house.search.base.RainbowApiResponse;
 import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
+import com.rainbow.house.search.base.constants.HouseOperationConstants;
+import com.rainbow.house.search.base.enums.HouseStatusEnum;
 import com.rainbow.house.search.entity.SupportAddressDO;
 import com.rainbow.house.search.service.HouseService;
 import com.rainbow.house.search.service.SubwayService;
 import com.rainbow.house.search.service.SupportAddressService;
+import com.rainbow.house.search.service.UserService;
 import com.rainbow.house.search.web.dto.*;
 import com.rainbow.house.search.web.form.DataTableSearch;
 import com.rainbow.house.search.web.form.HouseForm;
+import org.elasticsearch.common.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -47,6 +52,9 @@ public class AdminController {
 
   @Autowired
   private SubwayService subwayService;
+
+  @Autowired
+  private UserService userService;
 
   /**
    * <pre>后台管理中心</pre>
@@ -232,7 +240,178 @@ public class AdminController {
     return RainbowApiResponse.message(RainbowApiResponse.RespStatus.BAD_REQUEST.getCode(), result.getMessage());
   }
 
+  /**
+   * <pre>移除房产图片</pre>
+   *
+   * @param id 图片ID
+   * @return
+   */
+  @DeleteMapping("admin/house/delete")
+  @ResponseBody
+  public RainbowApiResponse removeHousePhoto(@RequestParam(value = "id") Long id) {
+    ServiceResult result = houseService.removePhoto(id);
 
+    if (result.isSuccess()) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.SUCCESS);
+    } else {
+      return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+    }
+  }
 
+  /**
+   * <pre>修改封面接口</pre>
+   *
+   * @param coverId  封面Id
+   * @param targetId 要修改的ID
+   * @return
+   */
+  @PostMapping("admin/house/cover")
+  @ResponseBody
+  public RainbowApiResponse updateCover(@RequestParam(value = "cover_id") Long coverId,
+                                        @RequestParam(value = "target_id") Long targetId) {
+    ServiceResult result = houseService.updateCover(coverId, targetId);
+    if (result.isSuccess()) {
+      return RainbowApiResponse.success(null);
+    }
+    return RainbowApiResponse.message(RainbowApiResponse.RespStatus.BAD_REQUEST.getCode(), result.getMessage());
+  }
+
+  /**
+   * <pre>增加标签</pre>
+   *
+   * @param houseId 房产Id
+   * @param tag     标签
+   * @return
+   */
+  @PostMapping("admin/house/tag")
+  @ResponseBody
+  public RainbowApiResponse addHouseTag(@RequestParam(value = "house_id") Long houseId,
+                                        @RequestParam(value = "tag") String tag) {
+    if (houseId < 1 || Strings.isNullOrEmpty(tag)) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.BAD_REQUEST);
+    }
+    ServiceResult result = houseService.addTag(houseId, tag);
+    if (result.isSuccess()) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.SUCCESS);
+    } else {
+      return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+    }
+  }
+
+  /**
+   * <pre>移除标签</pre>
+   *
+   * @param houseId 房产ID
+   * @param tag     标签
+   * @return
+   */
+  @DeleteMapping("admin/house/tag")
+  @ResponseBody
+  public RainbowApiResponse removeHouseTag(@RequestParam(value = "house_id") Long houseId,
+                                           @RequestParam(value = "tag") String tag) {
+    if (houseId < 1 || Strings.isNullOrEmpty(tag)) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.BAD_REQUEST);
+    }
+    ServiceResult result = houseService.removeTag(houseId, tag);
+    if (result.isSuccess()) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.SUCCESS);
+    } else {
+      return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+    }
+  }
+
+  /**
+   * <pre>房产审核</pre>
+   *
+   * @param id        房产Id
+   * @param operation 操作
+   * @return
+   */
+  @PutMapping("admin/house/operate/{id}/{operation}")
+  @ResponseBody
+  public RainbowApiResponse operateHouse(@PathVariable(value = "id") Long id,
+                                         @PathVariable(value = "operation") int operation) {
+    if (id <= 0) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.NOT_VALID_PARAM);
+    }
+    ServiceResult result;
+
+    switch (operation) {
+      case HouseOperationConstants.PASS:
+        result = this.houseService.updateStatus(id, HouseStatusEnum.PASSES.getValue());
+        break;
+      case HouseOperationConstants.PULL_OUT:
+        result = this.houseService.updateStatus(id, HouseStatusEnum.NOT_AUDITED.getValue());
+        break;
+      case HouseOperationConstants.DELETE:
+        result = this.houseService.updateStatus(id, HouseStatusEnum.DELETED.getValue());
+        break;
+      case HouseOperationConstants.RENT:
+        result = this.houseService.updateStatus(id, HouseStatusEnum.RENTED.getValue());
+        break;
+      default:
+        return RainbowApiResponse.status(RainbowApiResponse.RespStatus.BAD_REQUEST);
+    }
+
+    if (result.isSuccess()) {
+      return RainbowApiResponse.success(null);
+    }
+    return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), result.getMessage());
+  }
+
+  /**
+   * <pre>房产订阅</pre>
+   *
+   * @return
+   */
+  @GetMapping("admin/house/subscribe")
+  public String houseSubscribe() {
+    return "admin/subscribe";
+  }
+
+  @GetMapping("admin/house/subscribe/list")
+  @ResponseBody
+  public RainbowApiResponse subscribeList(@RequestParam(value = "draw") int draw,
+                                          @RequestParam(value = "start") int start,
+                                          @RequestParam(value = "length") int size) {
+    ServiceMultiResult<Pair<HouseDTO, HouseSubscribeDTO>> result = houseService.findSubscribeList(start, size);
+
+    DataTableResponse response = new DataTableResponse(RainbowApiResponse.RespStatus.SUCCESS);
+    response.setData(result.getResults());
+    response.setDraw(draw);
+    response.setRecordsFiltered(result.getTotal());
+    response.setRecordsTotal(result.getTotal());
+    return response;
+  }
+
+  @GetMapping("admin/user/{userId}")
+  @ResponseBody
+  public RainbowApiResponse getUserInfo(@PathVariable(value = "userId") Long userId) {
+    if (userId == null || userId < 1) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.BAD_REQUEST);
+    }
+
+    ServiceResult<UserDTO> serviceResult = userService.findById(userId);
+    if (!serviceResult.isSuccess()) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.NOT_FOUND);
+    } else {
+      return RainbowApiResponse.success(serviceResult.getResult());
+    }
+  }
+
+  @PostMapping("admin/finish/subscribe")
+  @ResponseBody
+  public RainbowApiResponse finishSubscribe(@RequestParam(value = "house_id") Long houseId) {
+    if (houseId < 1) {
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.BAD_REQUEST);
+    }
+
+    ServiceResult serviceResult = houseService.finishSubscribe(houseId);
+    if (serviceResult.isSuccess()) {
+      return RainbowApiResponse.success("");
+    } else {
+      return RainbowApiResponse.message(RainbowApiResponse.RespStatus.BAD_REQUEST.getCode(), serviceResult.getMessage());
+    }
+  }
 
 }

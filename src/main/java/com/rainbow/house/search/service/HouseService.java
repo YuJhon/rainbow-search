@@ -98,4 +98,65 @@ public interface HouseService {
    * @return
    */
   ServiceResult cancelSubscribe(Long houseId);
+
+  /**
+   * <pre>移除房产图片</pre>
+   *
+   * @param id 图片ID
+   * @return
+   */
+  ServiceResult removePhoto(Long id);
+
+  /**
+   * <pre>审核操作</pre>
+   *
+   * @param id     房产ID
+   * @param status 房产状态
+   * @return
+   */
+  ServiceResult updateStatus(Long id, int status);
+
+  /**
+   * <pre>更新封面</pre>
+   *
+   * @param coverId  封面图片ID
+   * @param targetId 更新的Id
+   * @return
+   */
+  ServiceResult updateCover(Long coverId, Long targetId);
+
+  /**
+   * <pre>添加标签</pre>
+   *
+   * @param houseId 房间Id
+   * @param tag     标签
+   * @return
+   */
+  ServiceResult addTag(Long houseId, String tag);
+
+  /**
+   * <pre>移除标签</pre>
+   *
+   * @param houseId 房产Id
+   * @param tag     标签
+   * @return
+   */
+  ServiceResult removeTag(Long houseId, String tag);
+
+  /**
+   * <pre>完成预约</pre>
+   *
+   * @param houseId 房产ID
+   * @return
+   */
+  ServiceResult finishSubscribe(Long houseId);
+
+  /**
+   * <pre>查找预约列表</pre>
+   *
+   * @param start 开始记录
+   * @param size  查询记录数
+   * @return
+   */
+  ServiceMultiResult<Pair<HouseDTO, HouseSubscribeDTO>> findSubscribeList(int start, int size);
 }

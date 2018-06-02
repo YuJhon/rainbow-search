@@ -29,4 +29,13 @@ public interface HouseTagRepository extends CrudRepository<HouseTagDO, Long> {
    * @return
    */
   List<HouseTagDO> findAllByHouseIdIn(List<Long> houseIds);
+
+  /**
+   * <pre>通过标签名和房产id查找房屋标签</pre>
+   *
+   * @param tag     标签名称
+   * @param houseId 房产ID
+   * @return
+   */
+  HouseTagDO findByNameAndHouseId(String tag, Long houseId);
 }
