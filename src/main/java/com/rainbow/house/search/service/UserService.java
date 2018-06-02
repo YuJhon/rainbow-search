@@ -37,4 +37,20 @@ public interface UserService {
    * @return
    */
   ServiceResult modifyUserProfile(String profile, String value);
+
+  /**
+   * <pre>通过手机号查询对应的用户</pre>
+   *
+   * @param telephone 手机号码
+   * @return
+   */
+  UserDO findUserByTelephone(String telephone);
+
+  /**
+   * <pre>通过手机号添加用户信息</pre>
+   *
+   * @param telephone 手机号
+   * @return
+   */
+  UserDO addUserByPhone(String telephone);
 }

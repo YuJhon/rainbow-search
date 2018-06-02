@@ -53,4 +53,12 @@ public interface UserRepository extends CrudRepository<UserDO, Long> {
   @Modifying
   @Query("update User as user set user.password = :password where id = :id")
   void updatePassword(@Param(value = "id") Long id, @Param(value = "password") String password);
+
+  /**
+   * <pre>通过手机号查询对应的用户信息</pre>
+   *
+   * @param telephone 手机号码
+   * @return
+   */
+  UserDO findUserByTelephone(String telephone);
 }

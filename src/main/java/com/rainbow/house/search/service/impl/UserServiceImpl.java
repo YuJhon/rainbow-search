@@ -1,5 +1,6 @@
 package com.rainbow.house.search.service.impl;
 
+import com.google.common.collect.Lists;
 import com.rainbow.house.search.base.LoginUserUtil;
 import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.entity.RoleDO;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -87,5 +89,41 @@ public class UserServiceImpl implements UserService {
         return new ServiceResult(false, "不支持的属性");
     }
     return ServiceResult.success();
+  }
+
+  @Override
+  public UserDO findUserByTelephone(String telephone) {
+    UserDO user = userRepository.findUserByTelephone(telephone);
+    if (user == null) {
+      return null;
+    }
+    List<RoleDO> roles = roleRepository.findRolesByUserId(user.getId());
+    if (roles == null || roles.isEmpty()) {
+      throw new DisabledException("权限非法");
+    }
+
+    List<GrantedAuthority> authorities = new ArrayList<>();
+    roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+    user.setAuthorities(authorities);
+    return user;
+  }
+
+  @Override
+  public UserDO addUserByPhone(String telephone) {
+    UserDO user = new UserDO();
+    user.setPhoneNumber(telephone);
+    user.setName(telephone.substring(0, 3) + "****" + telephone.substring(7, telephone.length()));
+    Date now = new Date();
+    user.setCreateTime(now);
+    user.setLastLoginTime(now);
+    user.setLastUpdateTime(now);
+    user = userRepository.save(user);
+
+    RoleDO role = new RoleDO();
+    role.setName("USER");
+    role.setUserId(user.getId());
+    roleRepository.save(role);
+    user.setAuthorities(Lists.newArrayList(new SimpleGrantedAuthority("ROLE_USER")));
+    return user;
   }
 }
