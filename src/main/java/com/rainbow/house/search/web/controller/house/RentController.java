@@ -67,6 +67,7 @@ public class RentController {
       return "redirect:/index";
     }
 
+    model.addAttribute("currentCity", city.getResult());
     ServiceMultiResult<SupportAddressDTO> regionsResult = supportAddressService.findAllRegionsByCityName(rentSearchCondition.getCityEnName());
     if (regionsResult.getResults() == null || regionsResult.getTotal() < 1) {
       redirectAttributes.addAttribute("msg", "must_choose_city");
@@ -111,7 +112,7 @@ public class RentController {
     SupportAddressDTO region = addressMap.get(SupportAddressDO.Level.REGION);
 
     model.addAttribute("city",city);
-    model.addAttribute("regin",region);
+    model.addAttribute("region",region);
 
     ServiceResult<UserDTO> userDTOServiceResult = userService.findById(houseDTO.getAdminId());
     model.addAttribute("agent",userDTOServiceResult.getResult());
