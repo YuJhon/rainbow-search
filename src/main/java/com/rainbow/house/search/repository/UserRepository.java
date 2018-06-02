@@ -60,5 +60,5 @@ public interface UserRepository extends CrudRepository<UserDO, Long> {
    * @param telephone 手机号码
    * @return
    */
-  UserDO findUserByTelephone(String telephone);
+  UserDO findUserByPhoneNumber(String telephone);
 }

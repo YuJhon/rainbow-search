@@ -2,6 +2,7 @@ package com.rainbow.house.search.service.impl;
 
 import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.service.SmsService;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>功能描述</br>短信验证码接口实现类</p>
@@ -11,6 +12,7 @@ import com.rainbow.house.search.service.SmsService;
  * @projectName rainbow-search
  * @date 2018/6/2 10:35
  */
+@Service
 public class SmsServiceImpl implements SmsService {
 
   @Override

@@ -17,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDO findUserByTelephone(String telephone) {
-    UserDO user = userRepository.findUserByTelephone(telephone);
+    UserDO user = userRepository.findUserByPhoneNumber(telephone);
     if (user == null) {
       return null;
     }
