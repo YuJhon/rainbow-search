@@ -31,7 +31,7 @@ public interface UserRepository extends CrudRepository<UserDO, Long> {
    * @param name 用户姓名
    */
   @Modifying
-  @Query("update t_user as user set user.name = :name where id = :id")
+  @Query("update UserDO as user set user.name = :name where id = :id")
   void updateUsername(@Param(value = "id") Long id, @Param(value = "name") String name);
 
   /**
@@ -41,7 +41,7 @@ public interface UserRepository extends CrudRepository<UserDO, Long> {
    * @param email 用户邮箱
    */
   @Modifying
-  @Query("update t_user as user set user.email = :email where id = :id")
+  @Query("update UserDO as user set user.email = :email where id = :id")
   void updateEmail(@Param(value = "id") Long id, @Param(value = "email") String email);
 
   /**
@@ -51,7 +51,7 @@ public interface UserRepository extends CrudRepository<UserDO, Long> {
    * @param password 用户密码
    */
   @Modifying
-  @Query("update t_user as user set user.password = :password where id = :id")
+  @Query("update UserDO as user set user.password = :password where id = :id")
   void updatePassword(@Param(value = "id") Long id, @Param(value = "password") String password);
 
   /**

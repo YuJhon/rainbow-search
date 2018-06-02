@@ -51,6 +51,6 @@ public interface HouseSubscribeRepository extends CrudRepository<HouseSubscribeD
    * @param status 更新状态
    */
   @Modifying
-  @Query("update t_house_subscribe as subscribe set subscribe.status = :status where subscribe.id = :id")
+  @Query("update HouseSubscribeDO as subscribe set subscribe.status = :status where subscribe.id = :id")
   void updateStatus(Long id, int status);
 }

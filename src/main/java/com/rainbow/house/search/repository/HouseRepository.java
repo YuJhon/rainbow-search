@@ -24,7 +24,7 @@ public interface HouseRepository extends PagingAndSortingRepository<HouseDO, Lon
    * @param status 房屋状态
    */
   @Modifying
-  @Query("update t_house as house set house.status = :status where house.id = :id")
+  @Query("update HouseDO as house set house.status = :status where house.id = :id")
   void updateStatus(@Param(value = "id") Long id, @Param(value = "status") int status);
 
   /**
@@ -34,7 +34,7 @@ public interface HouseRepository extends PagingAndSortingRepository<HouseDO, Lon
    * @param cover 封面
    */
   @Modifying
-  @Query("update t_house as house set house.cover = :cover where house.id = :id")
+  @Query("update HouseDO as house set house.cover = :cover where house.id = :id")
   void updateCover(@Param(value = "id") Long id, @Param(value = "cover") String cover);
 
   /**
@@ -43,6 +43,6 @@ public interface HouseRepository extends PagingAndSortingRepository<HouseDO, Lon
    * @param houseId 房产Id
    */
   @Modifying
-  @Query("update t_house as house set house.watchTimes = house.watchTimes + 1 where house.id = :id")
+  @Query("update HouseDO as house set house.watchTimes = house.watchTimes + 1 where house.id = :id")
   void updateWatchTimes(@Param(value = "id") Long houseId);
 }
