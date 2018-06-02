@@ -515,7 +515,12 @@ public class HouseServiceImpl implements HouseService {
     List<HouseTagDO> houseTags = houseTagRepository.findAllByHouseIdIn(houseIds);
     houseTags.forEach(houseTagDO -> {
       HouseDTO houseDTO = idToHouseMap.get(houseTagDO.getHouseId());
-      houseDTO.getTags().add(houseTagDO.getName());
+      List<String> tagList = houseDTO.getTags();
+      if (tagList == null){
+        tagList = new ArrayList<>();
+      }
+      tagList.add(houseTagDO.getName());
+      houseDTO.setTags(tagList);
     });
   }
 

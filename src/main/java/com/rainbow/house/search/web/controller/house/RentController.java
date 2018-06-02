@@ -45,7 +45,7 @@ public class RentController {
   @Autowired
   private UserService userService;
 
-  @GetMapping("rent/house")
+  @GetMapping("/house")
   public String rentHomePage(@ModelAttribute RentSearchCondition rentSearchCondition,
                              Model model, HttpSession session,
                              RedirectAttributes redirectAttributes) {
