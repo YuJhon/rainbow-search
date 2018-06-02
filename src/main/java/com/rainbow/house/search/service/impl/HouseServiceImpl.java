@@ -10,6 +10,7 @@ import com.rainbow.house.search.base.rent.HouseSort;
 import com.rainbow.house.search.base.rent.RentSearchCondition;
 import com.rainbow.house.search.entity.*;
 import com.rainbow.house.search.repository.*;
+import com.rainbow.house.search.service.EsSearchService;
 import com.rainbow.house.search.service.HouseService;
 import com.rainbow.house.search.web.dto.HouseDTO;
 import com.rainbow.house.search.web.dto.HouseDetailDTO;
@@ -67,6 +68,9 @@ public class HouseServiceImpl implements HouseService {
 
   @Autowired
   private SubwayStationRepository subwayStationRepository;
+
+  @Autowired
+  private EsSearchService esSearchService;
 
   @Value("${qiniu.cdn.prefix}")
   private String cdnPrefix;
@@ -238,7 +242,7 @@ public class HouseServiceImpl implements HouseService {
     houseRepository.save(house);
 
     if (house.getStatus() == HouseStatusEnum.PASSES.getValue()) {
-      // TODO
+      esSearchService.indexVersionOne(house.getId());
     }
     return ServiceResult.success();
   }
@@ -246,9 +250,36 @@ public class HouseServiceImpl implements HouseService {
   @Override
   public ServiceMultiResult<HouseDTO> queryHouses(RentSearchCondition rentSearchCondition) {
     if (rentSearchCondition.getKeywords() != null && !"".equals(rentSearchCondition.getKeywords())) {
-      // TODO
+      ServiceMultiResult<Long> result = esSearchService.query(rentSearchCondition);
+      if (result.getTotal() == 0) {
+        return new ServiceMultiResult<>(0, new ArrayList<>());
+      }
+      return new ServiceMultiResult<>(result.getTotal(), wrapperHouseResult(result.getResults()));
     }
     return simpleQuery(rentSearchCondition);
+  }
+
+  /**
+   * <pre>封装结果</pre>
+   *
+   * @param houseIds 房产Id
+   */
+  private List<HouseDTO> wrapperHouseResult(List<Long> houseIds) {
+    List<HouseDTO> result = new ArrayList<>();
+    Map<Long, HouseDTO> idToHouseMap = new HashMap<>();
+    Iterable<HouseDO> houses = houseRepository.findAll(houseIds);
+    houses.forEach(houseDO -> {
+      HouseDTO houseDTO = modelMapper.map(houseDO, HouseDTO.class);
+      houseDTO.setCover(this.cdnPrefix + houseDO.getCover());
+      idToHouseMap.put(houseDO.getId(), houseDTO);
+    });
+    wrapperHouseList(houseIds, idToHouseMap);
+
+    /** 校正顺序 **/
+    for (Long houseId : houseIds) {
+      result.add(idToHouseMap.get(houseId));
+    }
+    return result;
   }
 
   @Override
@@ -390,6 +421,12 @@ public class HouseServiceImpl implements HouseService {
     }
 
     houseRepository.updateStatus(id, status);
+    /** 上架更新索引 其他情况都要删除索引 **/
+    if (status == HouseStatusEnum.PASSES.getValue()) {
+      esSearchService.indexVersionOne(id);
+    } else {
+      esSearchService.removeVersionOne(id);
+    }
     return ServiceResult.success();
   }
 
@@ -516,7 +553,7 @@ public class HouseServiceImpl implements HouseService {
     houseTags.forEach(houseTagDO -> {
       HouseDTO houseDTO = idToHouseMap.get(houseTagDO.getHouseId());
       List<String> tagList = houseDTO.getTags();
-      if (tagList == null){
+      if (tagList == null) {
         tagList = new ArrayList<>();
       }
       tagList.add(houseTagDO.getName());
@@ -533,7 +570,7 @@ public class HouseServiceImpl implements HouseService {
    */
   private List<HousePictureDO> generateHousePictures(HouseForm houseForm, Long houseId) {
     List<HousePictureDO> pictures = new ArrayList<>();
-    if (houseForm.getPhotos() != null || houseForm.getPhotos().isEmpty()) {
+    if (houseForm.getPhotos() == null || houseForm.getPhotos().isEmpty()) {
       return pictures;
     }
 

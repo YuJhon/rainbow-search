@@ -1,11 +1,13 @@
 package com.rainbow.house.search.web.controller.house;
 
+import com.rainbow.house.search.base.RainbowApiResponse;
 import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.base.rent.RentSearchCondition;
 import com.rainbow.house.search.base.rent.RentValueBlock;
 import com.rainbow.house.search.entity.HouseDO;
 import com.rainbow.house.search.entity.SupportAddressDO;
+import com.rainbow.house.search.service.EsSearchService;
 import com.rainbow.house.search.service.HouseService;
 import com.rainbow.house.search.service.SupportAddressService;
 import com.rainbow.house.search.service.UserService;
@@ -15,13 +17,11 @@ import com.rainbow.house.search.web.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +44,20 @@ public class RentController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private EsSearchService esSearchService;
+
+
+  @GetMapping("/house/autocomplete")
+  @ResponseBody
+  public RainbowApiResponse autoComplete(@RequestParam(value = "prefix") String prefix){
+    if (prefix.isEmpty()){
+      return RainbowApiResponse.status(RainbowApiResponse.RespStatus.BAD_REQUEST);
+    }
+    ServiceResult<List<String>> result = esSearchService.suggest(prefix);
+    return RainbowApiResponse.success(result.getResult());
+  }
 
   @GetMapping("/house")
   public String rentHomePage(@ModelAttribute RentSearchCondition rentSearchCondition,

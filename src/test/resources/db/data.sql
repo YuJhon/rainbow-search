@@ -29,7 +29,7 @@ INSERT INTO `t_support_address`(`id`, `belong_to`, `en_name`, `cn_name`, `level`
 INSERT INTO `t_house`(`id`, `title`, `price`, `area`, `room`, `floor`, `total_floor`, `watch_times`, `build_year`,
                     `status`, `create_time`, `last_update_time`, `city_en_name`, `region_en_name`, `cover`,
                     `direction`, `distance_to_subway`, `parlour`, `district`, `admin_id`, `bathroom`, `street`)
-  VALUES ('15', '富力城 国贸CBD 时尚休闲 商务办公 超棒Jhon', '6200', '70', '2', '10', '20', '2', '2005', '1', '2017-09-06 18:56:14', '2017-09-15 00:26:59', 'bj', 'hdq', 'FmD3zKG-gUPOrNv0HwzZN7IbkAC_', '2', '10', '1', '融泽嘉园', '2', '0', '龙域西二路'),
+  VALUES ('15', '富力城 国贸CBD 时尚休闲 商务办公(jjyy测试)', '6200', '70', '2', '10', '20', '2', '2005', '1', '2017-09-06 18:56:14', '2017-09-15 00:26:59', 'bj', 'hdq', 'FmD3zKG-gUPOrNv0HwzZN7IbkAC_', '2', '10', '1', '融泽嘉园', '2', '0', '龙域西二路'),
   ('16', '富力城 国贸CBD 时尚休闲 商务办公', '6300', '70', '2', '10', '20', '0', '2012', '1', '2017-09-06 19:53:35', '2017-09-11 00:35:13', 'bj', 'hdq', 'FmD3zKG-gUPOrNv0HwzZN7IbkAC_', '1', '-1', '1', '融泽嘉园', '2', '0', '龙域西二路'),
   ('17', '二环东直门地铁站附近、王府井、天安门、国贸、三里屯、南锣鼓巷', '3000', '35', '1', '5', '10', '0', '2013', '1', '2017-09-06 20:45:35', '2017-09-11 00:35:05', 'bj', 'hdq', 'FhVdDhzVDH1dLVVx4jOaVXOCfnea', '1', '200', '0', '融泽嘉园', '2', '0', '龙域西二路'),
   ('18', '华贸城 东向一居挑空loft 干净温馨 随时可以签约', '5700', '52', '1', '7', '20', '0', '2012', '1', '2017-09-06 21:01:02', '2017-09-11 00:35:01', 'bj', 'hdq', 'FsxiS6rOTpSg5pK7tv41e8Zpnn_c', '2', '1085', '1', '融泽嘉园', '2', '0', '龙域西二路'),
