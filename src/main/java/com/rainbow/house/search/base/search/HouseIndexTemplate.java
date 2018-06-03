@@ -1,5 +1,6 @@
 package com.rainbow.house.search.base.search;
 
+import com.rainbow.house.search.base.baidu.map.BaiduMapLocation;
 import lombok.Data;
 
 import java.util.Date;
@@ -57,4 +58,6 @@ public class HouseIndexTemplate {
   private List<String> tags;
 
   private List<HouseSuggest> suggest;
+
+  private BaiduMapLocation location;
 }

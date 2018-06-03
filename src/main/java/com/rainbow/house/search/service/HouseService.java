@@ -4,6 +4,7 @@ import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.base.enums.HouseSubscribeStatusEnum;
 import com.rainbow.house.search.base.rent.RentSearchCondition;
+import com.rainbow.house.search.base.search.MapSearch;
 import com.rainbow.house.search.web.dto.HouseDTO;
 import com.rainbow.house.search.web.dto.HouseSubscribeDTO;
 import com.rainbow.house.search.web.form.DataTableSearch;
@@ -159,4 +160,20 @@ public interface HouseService {
    * @return
    */
   ServiceMultiResult<Pair<HouseDTO, HouseSubscribeDTO>> findSubscribeList(int start, int size);
+
+  /**
+   * <pre>全地图查询</pre>
+   *
+   * @param mapSearch 查询条件
+   * @return
+   */
+  ServiceMultiResult<HouseDTO> wholeMapQuery(MapSearch mapSearch);
+
+  /**
+   * <pre>精确范围数据查询</pre>
+   *
+   * @param mapSearch 查询条件
+   * @return
+   */
+  ServiceMultiResult<HouseDTO> boundMapQuery(MapSearch mapSearch);
 }

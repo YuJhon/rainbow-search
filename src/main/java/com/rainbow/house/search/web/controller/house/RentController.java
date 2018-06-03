@@ -5,6 +5,8 @@ import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.base.rent.RentSearchCondition;
 import com.rainbow.house.search.base.rent.RentValueBlock;
+import com.rainbow.house.search.base.search.HouseBucketDTO;
+import com.rainbow.house.search.base.search.MapSearch;
 import com.rainbow.house.search.entity.HouseDO;
 import com.rainbow.house.search.entity.SupportAddressDO;
 import com.rainbow.house.search.service.EsSearchService;
@@ -15,6 +17,7 @@ import com.rainbow.house.search.web.dto.HouseDTO;
 import com.rainbow.house.search.web.dto.SupportAddressDTO;
 import com.rainbow.house.search.web.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -132,12 +135,52 @@ public class RentController {
     model.addAttribute("agent", userDTOServiceResult.getResult());
     model.addAttribute("house", houseDTO);
 
-    /** TODO[对小区进行聚合] **/
-    ServiceResult<Long> aggResult =esSearchService.aggregateDistrictHouse(city.getEnName(),region.getEnName(),houseDTO.getDistrict());
+    /** [对小区进行聚合] **/
+    ServiceResult<Long> aggResult = esSearchService.aggregateDistrictHouse(city.getEnName(), region.getEnName(), houseDTO.getDistrict());
     model.addAttribute("houseCountInDistrict", aggResult.getResult());
 
     return "house-detail";
   }
 
+  @GetMapping("/house/map")
+  public String retMapPage(@RequestParam(value = "cityEnName") String cityEnName,
+                           Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+    /** 1.获取城市数据 **/
+    ServiceResult<SupportAddressDTO> city = supportAddressService.findCity(cityEnName);
+    if (!city.isSuccess()) {
+      redirectAttributes.addAttribute("msg", "must_choose_city");
+      return "redirect:/index";
+    } else {
+      session.setAttribute("cityName", cityEnName);
+      model.addAttribute("city", city.getResult());
+    }
+    /** 2.获取区域数据 **/
+    ServiceMultiResult<SupportAddressDTO> regions = supportAddressService.findAllRegionsByCityName(cityEnName);
 
+    /** 3.获取聚合数据  **/
+    ServiceMultiResult<HouseBucketDTO> aggResult = esSearchService.mapAggregate(cityEnName);
+    model.addAttribute("aggData", aggResult.getResults());
+    model.addAttribute("total", aggResult.getTotal());
+    model.addAttribute("regions", regions.getResults());
+    return "rent-map";
+  }
+
+  @GetMapping("/house/map/houses")
+  @ResponseBody
+  public RainbowApiResponse rentMapHouses(@ModelAttribute MapSearch mapSearch) {
+    if (mapSearch.getCityEnName() == null) {
+      return RainbowApiResponse.message(HttpStatus.BAD_REQUEST.value(), "必须选择城市");
+    }
+    ServiceMultiResult<HouseDTO> serviceMultiResult;
+    if (mapSearch.getLevel() < 13) {
+      serviceMultiResult = houseService.wholeMapQuery(mapSearch);
+    } else {
+      /** 小地图查询必须要传递地图边界参数 **/
+      serviceMultiResult = houseService.boundMapQuery(mapSearch);
+    }
+
+    RainbowApiResponse response = RainbowApiResponse.success(serviceMultiResult.getResults());
+    response.setMore(serviceMultiResult.getTotal() > (mapSearch.getStart() + mapSearch.getSize()));
+    return response;
+  }
 }

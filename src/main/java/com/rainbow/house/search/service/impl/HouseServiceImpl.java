@@ -1,5 +1,6 @@
 package com.rainbow.house.search.service.impl;
 
+import com.fasterxml.jackson.databind.ser.std.MapSerializer;
 import com.google.common.collect.Maps;
 import com.rainbow.house.search.base.LoginUserUtil;
 import com.rainbow.house.search.base.ServiceMultiResult;
@@ -8,6 +9,7 @@ import com.rainbow.house.search.base.enums.HouseStatusEnum;
 import com.rainbow.house.search.base.enums.HouseSubscribeStatusEnum;
 import com.rainbow.house.search.base.rent.HouseSort;
 import com.rainbow.house.search.base.rent.RentSearchCondition;
+import com.rainbow.house.search.base.search.MapSearch;
 import com.rainbow.house.search.entity.*;
 import com.rainbow.house.search.repository.*;
 import com.rainbow.house.search.service.EsSearchService;
@@ -493,6 +495,35 @@ public class HouseServiceImpl implements HouseService {
     Page<HouseSubscribeDO> page = houseSubscribeRepository.findAllByAdminIdAndStatus(userId, HouseSubscribeStatusEnum.IN_ORDER_TIME.getValue(), pageable);
 
     return wrapper(page);
+  }
+
+  @Override
+  public ServiceMultiResult<HouseDTO> wholeMapQuery(MapSearch mapSearch) {
+    boolean isWholeQuery = true;
+    return this.mapQueryProcess(mapSearch, isWholeQuery);
+  }
+
+  @Override
+  public ServiceMultiResult<HouseDTO> boundMapQuery(MapSearch mapSearch) {
+    boolean isWholeQuery = false;
+    return this.mapQueryProcess(mapSearch, isWholeQuery);
+  }
+
+  /**
+   * <pre>地图找房</pre>
+   *
+   * @param mapSearch    查询条件
+   * @param isWholeQuery 是否全地图查询
+   * @return
+   */
+  private ServiceMultiResult<HouseDTO> mapQueryProcess(MapSearch mapSearch, boolean isWholeQuery) {
+    ServiceMultiResult<Long> serviceResult = esSearchService.mapQuery(mapSearch, isWholeQuery);
+    if (serviceResult.getTotal() == 0) {
+      return new ServiceMultiResult<>(0, new ArrayList<>());
+    }
+
+    List<HouseDTO> houses = wrapperHouseResult(serviceResult.getResults());
+    return new ServiceMultiResult<>(serviceResult.getTotal(), houses);
   }
 
   /**

@@ -3,6 +3,8 @@ package com.rainbow.house.search.service;
 import com.rainbow.house.search.base.ServiceMultiResult;
 import com.rainbow.house.search.base.ServiceResult;
 import com.rainbow.house.search.base.rent.RentSearchCondition;
+import com.rainbow.house.search.base.search.HouseBucketDTO;
+import com.rainbow.house.search.base.search.MapSearch;
 
 import java.util.List;
 
@@ -64,4 +66,21 @@ public interface EsSearchService {
    * @return
    */
   ServiceResult<Long> aggregateDistrictHouse(String cityEnName, String regionEnName, String district);
+
+  /**
+   * <pre>地图找房</pre>
+   *
+   * @param cityEnName 城市名称
+   * @return
+   */
+  ServiceMultiResult<HouseBucketDTO> mapAggregate(String cityEnName);
+
+  /**
+   * <pre>地图找房</pre>
+   *
+   * @param mapSearch    查询条件
+   * @param isWholeQuery 是否全地图查找
+   * @return
+   */
+  ServiceMultiResult<Long> mapQuery(MapSearch mapSearch, boolean isWholeQuery);
 }
