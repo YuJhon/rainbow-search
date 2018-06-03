@@ -19,9 +19,7 @@ import com.rainbow.house.search.repository.HouseDetailRepository;
 import com.rainbow.house.search.repository.HouseRepository;
 import com.rainbow.house.search.repository.HouseTagRepository;
 import com.rainbow.house.search.service.EsSearchService;
-import com.rainbow.house.search.web.dto.HouseDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.lucene.search.BooleanQuery;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequestBuilder;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
@@ -39,7 +37,8 @@ import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
@@ -253,10 +252,15 @@ public class EsSearchServiceImpl implements EsSearchService {
       );
     }
 
+    /** 提升权重(title) [must/should]**/
+    boolQuery.should(
+            QueryBuilders.matchQuery(HouseIndexKey.TITLE, rentSearchCondition.getKeywords())
+                    .boost(2.0f)
+    );
+
     /** 关键词搜素 **/
-    boolQuery.must(
+    boolQuery.should(
             QueryBuilders.multiMatchQuery(rentSearchCondition.getKeywords(),
-                    HouseIndexKey.TITLE,
                     HouseIndexKey.TRAFFIC,
                     HouseIndexKey.DISTRICT,
                     HouseIndexKey.ROUND_SERVICE,
@@ -270,6 +274,7 @@ public class EsSearchServiceImpl implements EsSearchService {
             .setQuery(boolQuery)
             .setFrom(rentSearchCondition.getStart())
             .setSize(rentSearchCondition.getSize())
+            /** 只查询固定的houseId字段 **/
             .setFetchSource(HouseIndexKey.HOUSE_ID, null);
 
     log.debug(requestBuilder.toString());
@@ -330,6 +335,35 @@ public class EsSearchServiceImpl implements EsSearchService {
     }
     List<String> suggests = Lists.newArrayList(suggestSet.toArray(new String[]{}));
     return ServiceResult.result(suggests);
+  }
+
+  @Override
+  public ServiceResult<Long> aggregateDistrictHouse(String cityEnName, String regionEnName, String district) {
+    /** 构建查询条件 **/
+    BoolQueryBuilder boolQuery = QueryBuilders.boolQuery()
+            .filter(QueryBuilders.termQuery(HouseIndexKey.CITY_EN_NAME, cityEnName))
+            .filter(QueryBuilders.termQuery(HouseIndexKey.REGION_EN_NAME, regionEnName))
+            .filter(QueryBuilders.termQuery(HouseIndexKey.DISTRICT, district));
+    /** 组织查询 **/
+    SearchRequestBuilder requestBuilder = this.esClient.prepareSearch(INDEX_NAME)
+            .setTypes(INDEX_TYPE)
+            .setQuery(boolQuery)
+            .addAggregation(
+                    AggregationBuilders.terms(HouseIndexKey.AGG_DISTRICT).field(HouseIndexKey.DISTRICT)
+            ).setSize(0);
+
+    log.debug(requestBuilder.toString());
+    /** 获取结果 **/
+    SearchResponse response = requestBuilder.get();
+    if (response.status() != RestStatus.OK) {
+      log.warn("Failed To Aggregate For:{}", HouseIndexKey.AGG_DISTRICT);
+    } else {
+      Terms terms = response.getAggregations().get(HouseIndexKey.AGG_DISTRICT);
+      if (terms.getBuckets() != null && !terms.getBuckets().isEmpty()) {
+        return ServiceResult.result(terms.getBucketByKey(district).getDocCount());
+      }
+    }
+    return ServiceResult.result(0L);
   }
 
   /**

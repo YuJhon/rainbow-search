@@ -51,8 +51,8 @@ public class RentController {
 
   @GetMapping("/house/autocomplete")
   @ResponseBody
-  public RainbowApiResponse autoComplete(@RequestParam(value = "prefix") String prefix){
-    if (prefix.isEmpty()){
+  public RainbowApiResponse autoComplete(@RequestParam(value = "prefix") String prefix) {
+    if (prefix.isEmpty()) {
       return RainbowApiResponse.status(RainbowApiResponse.RespStatus.BAD_REQUEST);
     }
     ServiceResult<List<String>> result = esSearchService.suggest(prefix);
@@ -110,30 +110,31 @@ public class RentController {
   }
 
   @GetMapping("/house/show/{id}")
-  public String show(@PathVariable(name = "id") Long houseId,Model model){
-    if (houseId < 0){
+  public String show(@PathVariable(name = "id") Long houseId, Model model) {
+    if (houseId < 0) {
       return "404";
     }
 
     ServiceResult<HouseDTO> serviceResult = houseService.findCompleteOne(houseId);
-    if (!serviceResult.isSuccess()){
+    if (!serviceResult.isSuccess()) {
       return "404";
     }
 
     HouseDTO houseDTO = serviceResult.getResult();
-    Map<SupportAddressDO.Level,SupportAddressDTO> addressMap = supportAddressService.findByCityAndRegion(houseDTO.getCityEnName(),houseDTO.getRegionEnName());
+    Map<SupportAddressDO.Level, SupportAddressDTO> addressMap = supportAddressService.findByCityAndRegion(houseDTO.getCityEnName(), houseDTO.getRegionEnName());
     SupportAddressDTO city = addressMap.get(SupportAddressDO.Level.CITY);
     SupportAddressDTO region = addressMap.get(SupportAddressDO.Level.REGION);
 
-    model.addAttribute("city",city);
-    model.addAttribute("region",region);
+    model.addAttribute("city", city);
+    model.addAttribute("region", region);
 
     ServiceResult<UserDTO> userDTOServiceResult = userService.findById(houseDTO.getAdminId());
-    model.addAttribute("agent",userDTOServiceResult.getResult());
-    model.addAttribute("house",houseDTO);
+    model.addAttribute("agent", userDTOServiceResult.getResult());
+    model.addAttribute("house", houseDTO);
 
-    /** TODO **/
-    model.addAttribute("houseCountInDistrict",10);
+    /** TODO[对小区进行聚合] **/
+    ServiceResult<Long> aggResult =esSearchService.aggregateDistrictHouse(city.getEnName(),region.getEnName(),houseDTO.getDistrict());
+    model.addAttribute("houseCountInDistrict", aggResult.getResult());
 
     return "house-detail";
   }

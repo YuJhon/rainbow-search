@@ -54,4 +54,14 @@ public interface EsSearchService {
    * @return
    */
   ServiceResult<List<String>> suggest(String prefix);
+
+  /**
+   * <pre>通过小区来聚合查询</pre>
+   *
+   * @param cityEnName   城市名称
+   * @param regionEnName 区域名称
+   * @param district     区域
+   * @return
+   */
+  ServiceResult<Long> aggregateDistrictHouse(String cityEnName, String regionEnName, String district);
 }
