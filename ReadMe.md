@@ -217,103 +217,103 @@
             ```
 #### 5.单元测试
 * 测试基类的配置
-```java
-package com.rainbow.house.search;
-
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles(value = "test")
-public class RainbowSearchApplicationTests {
-
-}
-
-```
+    ```java
+    package com.rainbow.house.search;
+    
+    import org.junit.runner.RunWith;
+    import org.springframework.boot.test.context.SpringBootTest;
+    import org.springframework.test.context.ActiveProfiles;
+    import org.springframework.test.context.junit4.SpringRunner;
+    
+    @RunWith(SpringRunner.class)
+    @SpringBootTest
+    @ActiveProfiles(value = "test")
+    public class RainbowSearchApplicationTests {
+    
+    }
+    
+    ```
 * 测试类（用户测试类）
-```java
-package com.rainbow.house.search.entity;
-
-import com.rainbow.house.search.RainbowSearchApplicationTests;
-import com.rainbow.house.search.repository.UserRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-/**
- * <p>功能描述</br>用户测试类</p>
- *
- * @author jiangy19
- * @version v1.0
- * @projectName rainbow-search
- * @date 2018/5/30 11:50
- */
-public class UserRepositoryTest extends RainbowSearchApplicationTests {
-
-  @Autowired
-  private UserRepository userRepository;
-
-  @Test
-  public void queryUserTest() {
-    UserDO user = userRepository.findOne(1L);
-    Assert.assertEquals(user.getName(),"jhonrain");
-  }
-}
-```
+    ```java
+    package com.rainbow.house.search.entity;
+    
+    import com.rainbow.house.search.RainbowSearchApplicationTests;
+    import com.rainbow.house.search.repository.UserRepository;
+    import org.junit.Assert;
+    import org.junit.Test;
+    import org.springframework.beans.factory.annotation.Autowired;
+    
+    /**
+     * <p>功能描述</br>用户测试类</p>
+     *
+     * @author jiangy19
+     * @version v1.0
+     * @projectName rainbow-search
+     * @date 2018/5/30 11:50
+     */
+    public class UserRepositoryTest extends RainbowSearchApplicationTests {
+    
+      @Autowired
+      private UserRepository userRepository;
+    
+      @Test
+      public void queryUserTest() {
+        UserDO user = userRepository.findOne(1L);
+        Assert.assertEquals(user.getName(),"jhonrain");
+      }
+    }
+    ```
 
 * 测试类（ES）
-```java
-package com.rainbow.house.search.service.search;
-
-import com.rainbow.house.search.RainbowSearchApplicationTests;
-import com.rainbow.house.search.base.ServiceMultiResult;
-import com.rainbow.house.search.base.rent.RentSearchCondition;
-import com.rainbow.house.search.service.EsSearchService;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-/**
- * <p>功能描述</br>Es的测试类</p>
- *
- * @author jiangy19
- * @version v1.0
- * @projectName rainbow-search
- * @date 2018/6/2 14:46
- */
-public class EsServiceTest extends RainbowSearchApplicationTests {
-
-  @Autowired
-  private EsSearchService esSearchService;
-
-  @Test
-  public void indexTest() {
-    Long houseId = 16L;
-    esSearchService.indexVersionOne(houseId);
-  }
-
-  @Test
-  public void removeIndexTest() {
-    Long houseId = 16L;
-    esSearchService.removeVersionOne(houseId);
-  }
-
-  @Test
-  public void query() {
-    RentSearchCondition rentSearchCondition = new RentSearchCondition();
-    rentSearchCondition.setCityEnName("bj");
-    rentSearchCondition.setStart(0);
-    rentSearchCondition.setSize(10);
-    ServiceMultiResult<Long> houseIds = esSearchService.query(rentSearchCondition);
-    System.out.print(houseIds.getResults());
-    Assert.assertEquals(2, houseIds.getTotal());
-  }
-}
-
-```
+    ```java
+    package com.rainbow.house.search.service.search;
+    
+    import com.rainbow.house.search.RainbowSearchApplicationTests;
+    import com.rainbow.house.search.base.ServiceMultiResult;
+    import com.rainbow.house.search.base.rent.RentSearchCondition;
+    import com.rainbow.house.search.service.EsSearchService;
+    import org.junit.Assert;
+    import org.junit.Test;
+    import org.springframework.beans.factory.annotation.Autowired;
+    
+    /**
+     * <p>功能描述</br>Es的测试类</p>
+     *
+     * @author jiangy19
+     * @version v1.0
+     * @projectName rainbow-search
+     * @date 2018/6/2 14:46
+     */
+    public class EsServiceTest extends RainbowSearchApplicationTests {
+    
+      @Autowired
+      private EsSearchService esSearchService;
+    
+      @Test
+      public void indexTest() {
+        Long houseId = 16L;
+        esSearchService.indexVersionOne(houseId);
+      }
+    
+      @Test
+      public void removeIndexTest() {
+        Long houseId = 16L;
+        esSearchService.removeVersionOne(houseId);
+      }
+    
+      @Test
+      public void query() {
+        RentSearchCondition rentSearchCondition = new RentSearchCondition();
+        rentSearchCondition.setCityEnName("bj");
+        rentSearchCondition.setStart(0);
+        rentSearchCondition.setSize(10);
+        ServiceMultiResult<Long> houseIds = esSearchService.query(rentSearchCondition);
+        System.out.print(houseIds.getResults());
+        Assert.assertEquals(2, houseIds.getTotal());
+      }
+    }
+    
+    ```
 
 #### 6.结束语
 
