@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>功能描述</br>百度地图辅助类</p>
+ * <p>功能描述</br>百度地图辅助类【虎鲸数据平台】</p>
  *
  * @author jiangy19
  * @version v1.0
@@ -131,6 +131,9 @@ public class BaiduMapHelper {
     params.add(new BasicNameValuePair("longitude", String.valueOf(location.getLongitude())));
     /**  百度坐标系 **/
     params.add(new BasicNameValuePair("coord_type", "3"));
+    /** 到虎鲸数据平台注册一个应用:http://lbsyun.baidu.com/data/mydata#/?_k=isek28
+     * http://lbsyun.baidu.com/index.php?title=lbscloud
+     * API文档：http://lbsyun.baidu.com/index.php?title=lbscloud/api/geodata**/
     params.add(new BasicNameValuePair("geotable_id", "175730"));
     params.add(new BasicNameValuePair("ak", BAIDU_MAP_KEY));
     params.add(new BasicNameValuePair("houseId", String.valueOf(houseId)));
