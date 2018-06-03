@@ -215,6 +215,20 @@
             ```bash
             D:\RAIN-MQ\kafka_2.11-1.1.0>bin\windows\kafka-server-start.bat config\server.properties
             ```
+* 百度地图的集成
+    * 百度地图的开放平台
+    ![百度开放平台](./doc/photos/035.百度地图开放平台入口.png)
+    ![](./doc/photos/036.地图开放平台.png)
+    ![](./doc/photos/37.创建两个应用（服务器端和浏览器端）.png)
+    * 虎鲸数据平台
+    
+    ![LBS字段定义](./doc/photos/40.LBS字段定义.png)
+    
+    ![创建LBS云应用](./doc/photos/39.创建LBS云应用.png)
+    
+    ![百度LBS功能实现](./doc/photos/38.百度LBS功能实现.png)
+    * ES索引重构(加上地理位置的索引结构)
+    [使用默认的分词器（standard）](./doc/index/house_index_with_perfect_config.json)
 #### 5.单元测试
 * 测试基类的配置
     ```java
