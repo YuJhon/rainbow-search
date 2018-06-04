@@ -35,12 +35,14 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
           throws AuthenticationException {
+    /** 先获取是否存在用户名 **/
     String name = obtainUsername(request);
     if (!Strings.isNullOrEmpty(name)) {
       request.setAttribute("username", name);
       return super.attemptAuthentication(request, response);
     }
 
+    /** 没有的话，判断手机号是否存在，如果存在就动态注册 **/
     String telephone = request.getParameter("telephone");
     if (Strings.isNullOrEmpty(telephone) || !LoginUserUtil.checkTelephone(telephone)) {
       throw new BadCredentialsException("Wrong telephone number");

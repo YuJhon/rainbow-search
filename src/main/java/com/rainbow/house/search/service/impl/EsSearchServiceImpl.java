@@ -385,6 +385,7 @@ public class EsSearchServiceImpl implements EsSearchService {
             .setTypes(INDEX_TYPE)
             .setQuery(boolQuery)
             .addAggregation(
+                    /** 按照小区聚合 **/
                     AggregationBuilders.terms(HouseIndexKey.AGG_DISTRICT).field(HouseIndexKey.DISTRICT)
             ).setSize(0);
 

@@ -150,7 +150,7 @@ public class UserController {
    */
   @DeleteMapping("api/user/house/subscribe")
   @ResponseBody
-  public RainbowApiResponse cancleSubscribe(@RequestParam(value = "houseId") Long houseId) {
+  public RainbowApiResponse cancelSubscribe(@RequestParam(value = "houseId") Long houseId) {
     ServiceResult result = houseService.cancelSubscribe(houseId);
     if (result.isSuccess()) {
       return RainbowApiResponse.status(RainbowApiResponse.RespStatus.SUCCESS);

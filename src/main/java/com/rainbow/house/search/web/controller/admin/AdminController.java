@@ -265,7 +265,7 @@ public class AdminController {
    * @param targetId 要修改的ID
    * @return
    */
-  @PostMapping("admin/house/cover")
+  @PostMapping("/house/cover")
   @ResponseBody
   public RainbowApiResponse updateCover(@RequestParam(value = "cover_id") Long coverId,
                                         @RequestParam(value = "target_id") Long targetId) {
@@ -283,7 +283,7 @@ public class AdminController {
    * @param tag     标签
    * @return
    */
-  @PostMapping("admin/house/tag")
+  @PostMapping("/house/tag")
   @ResponseBody
   public RainbowApiResponse addHouseTag(@RequestParam(value = "house_id") Long houseId,
                                         @RequestParam(value = "tag") String tag) {
@@ -305,7 +305,7 @@ public class AdminController {
    * @param tag     标签
    * @return
    */
-  @DeleteMapping("admin/house/tag")
+  @DeleteMapping("/house/tag")
   @ResponseBody
   public RainbowApiResponse removeHouseTag(@RequestParam(value = "house_id") Long houseId,
                                            @RequestParam(value = "tag") String tag) {
@@ -327,7 +327,7 @@ public class AdminController {
    * @param operation 操作
    * @return
    */
-  @PutMapping("admin/house/operate/{id}/{operation}")
+  @PutMapping("/house/operate/{id}/{operation}")
   @ResponseBody
   public RainbowApiResponse operateHouse(@PathVariable(value = "id") Long id,
                                          @PathVariable(value = "operation") int operation) {
@@ -364,12 +364,12 @@ public class AdminController {
    *
    * @return
    */
-  @GetMapping("admin/house/subscribe")
+  @GetMapping("/house/subscribe")
   public String houseSubscribe() {
     return "admin/subscribe";
   }
 
-  @GetMapping("admin/house/subscribe/list")
+  @GetMapping("/house/subscribe/list")
   @ResponseBody
   public RainbowApiResponse subscribeList(@RequestParam(value = "draw") int draw,
                                           @RequestParam(value = "start") int start,
@@ -384,7 +384,7 @@ public class AdminController {
     return response;
   }
 
-  @GetMapping("admin/user/{userId}")
+  @GetMapping("/user/{userId}")
   @ResponseBody
   public RainbowApiResponse getUserInfo(@PathVariable(value = "userId") Long userId) {
     if (userId == null || userId < 1) {
@@ -399,7 +399,7 @@ public class AdminController {
     }
   }
 
-  @PostMapping("admin/finish/subscribe")
+  @PostMapping("/finish/subscribe")
   @ResponseBody
   public RainbowApiResponse finishSubscribe(@RequestParam(value = "house_id") Long houseId) {
     if (houseId < 1) {

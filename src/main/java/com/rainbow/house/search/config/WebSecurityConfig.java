@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    * @param http
    * @throws Exception
    */
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
@@ -78,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    */
   @Autowired
   public void configGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) {
-    authenticationManagerBuilder.authenticationProvider(authProvider());
+    authenticationManagerBuilder.authenticationProvider(authProvider()).eraseCredentials(true);
   }
 
   /**
@@ -103,6 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
   @Bean
+  @Override
   public AuthenticationManager authenticationManager() {
     AuthenticationManager authenticationManager = null;
     try {
@@ -120,5 +122,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     authFilter.setAuthenticationFailureHandler(authFailHandler());
     return authFilter;
   }
-
 }

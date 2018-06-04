@@ -3,6 +3,7 @@ package com.rainbow.house.search.service.impl;
 import com.google.common.collect.Lists;
 import com.rainbow.house.search.base.LoginUserUtil;
 import com.rainbow.house.search.base.ServiceResult;
+import com.rainbow.house.search.base.enums.UserStatusEnum;
 import com.rainbow.house.search.entity.RoleDO;
 import com.rainbow.house.search.entity.UserDO;
 import com.rainbow.house.search.repository.RoleRepository;
@@ -116,6 +117,7 @@ public class UserServiceImpl implements UserService {
     user.setCreateTime(now);
     user.setLastLoginTime(now);
     user.setLastUpdateTime(now);
+    user.setStatus(UserStatusEnum.NORMAL.getValue());
     user = userRepository.save(user);
 
     RoleDO role = new RoleDO();
