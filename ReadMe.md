@@ -220,7 +220,7 @@
     ![百度开放平台](./doc/photos/035.百度地图开放平台入口.png)
     ![](./doc/photos/036.地图开放平台.png)
     ![](./doc/photos/37.创建两个应用（服务器端和浏览器端）.png)
-    * 虎鲸数据平台
+    * 虎鲸数据平台(http://lbsyun.baidu.com/data/)
     
     ![LBS字段定义](./doc/photos/40.LBS字段定义.png)
     
