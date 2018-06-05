@@ -185,6 +185,9 @@
         * ![使用ik_smart分词器执行](./doc/photos/21.使用ik_smart分词器执行.png)
         * ![索引数据建立](./doc/photos/22.索引数据建立.png)
         * ![测试ik_smart的分词效果](./doc/photos/23.测试ik_smart的分词效果.png)
+        
+    * 5.IK-Analysis插件的安装
+        * ![IK插件的安装](./doc/photos/41.IK插件的安装.png)
 
 * Kafka的环境配置【windows】（使用Kafka来异步创建和更新索引）
     * 1.下载kafka
