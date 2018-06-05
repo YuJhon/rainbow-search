@@ -294,6 +294,7 @@ public class EsSearchServiceImpl implements EsSearchService {
                     .boost(2.0f)
     );
 
+
     /** 关键词搜素 **/
     boolQuery.should(
             QueryBuilders.multiMatchQuery(rentSearchCondition.getKeywords(),
