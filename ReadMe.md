@@ -3,6 +3,7 @@
 #### 1.需求说明
 > 待补充
 
+* ES相关知识的更多资料了解，请移步参考[ES 学习系列摘记](./doc/es-learn/00.Elasticsearch%20a%20学习系列笔记.md)
 #### 2.数据库设计
 （略）
 
@@ -185,8 +186,6 @@
         * ![使用ik_smart分词器执行](./doc/photos/21.使用ik_smart分词器执行.png)
         * ![索引数据建立](./doc/photos/22.索引数据建立.png)
         * ![测试ik_smart的分词效果](./doc/photos/23.测试ik_smart的分词效果.png)
-        
-        * ES的更多资料了解，请移步参考[ES 学习系列摘记](./doc/es-learn/00.Elasticsearch%20a%20学习系列笔记.md)
         
     * 5.IK-Analysis插件的安装
         * ![IK插件的安装](./doc/photos/41.IK插件的安装.png)
