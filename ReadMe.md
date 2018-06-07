@@ -186,7 +186,7 @@
         * ![索引数据建立](./doc/photos/22.索引数据建立.png)
         * ![测试ik_smart的分词效果](./doc/photos/23.测试ik_smart的分词效果.png)
         
-        * ES的Restful API的使用，请移步参考[ES Restful API Use](./doc/es-learn/1.Elasticsearch的restful%20api接口学习使用.md)
+        * ES的更多资料了解，请移步参考[ES 学习系列摘记](./doc/es-learn/00.Elasticsearch%20a%20学习系列笔记.md)
         
     * 5.IK-Analysis插件的安装
         * ![IK插件的安装](./doc/photos/41.IK插件的安装.png)
